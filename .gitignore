@@ -48,3 +48,10 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+presentation/~$list_ArrayList.pptx
+presentation/~$list_ArrayList_Java_api.pptx
+presentation/~$list_ArrayList_Java_implementation.pptx
+presentation/~$template.pptx
+presentation/~*.pptx
+.idea
+*.iml
