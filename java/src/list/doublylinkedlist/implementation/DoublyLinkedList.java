@@ -1,10 +1,15 @@
 package list.doublylinkedlist.implementation;
 
+
+
 interface Iterator {
 	public boolean hasNext();
-
 	public Object next();
+	public boolean hasPrevious();
+	public Object previous();
 }
+
+
 
 public class DoublyLinkedList {
 	// 첫번째 노드를 가리키는 필드
@@ -16,6 +21,7 @@ public class DoublyLinkedList {
 		public Object data;
 		// 다음 노드를 가리키는 필드
 		public Node next;
+		public Node prev;
 		public Node(Object input) {
 			this.data = input;
 			this.next = null;
@@ -30,6 +36,9 @@ public class DoublyLinkedList {
 		Node temp = new Node(input);
 		// 새로운 노드의 다음 노드로 해드를 지정합니다.
 		temp.next = head;
+		// 기존에 노드가 있었다면 현재 헤드의 이전 노드로 새로운 노드를 지정합니다.
+		if(head != null)
+			head.prev = temp;
 		// 헤드로 새로운 노드를 지정합니다.
 		head = temp;
 		size++;
@@ -46,6 +55,7 @@ public class DoublyLinkedList {
 		} else {
 			// 마지막 노드의 다음 노드로 생성한 노드를 지정합니다.
 			tail.next = temp;
+			temp.prev = tail;
 			// 마지막 노드를 갱신합니다.
 			tail = temp;
 			// 엘리먼트의 개수를 1 증가 시킵니다.
@@ -63,14 +73,20 @@ public class DoublyLinkedList {
 			for(int i=0; i<k-1; i++){
 				temp1 = temp1.next;
 			}
+			
 			// k 번째 노드를 temp2로 지정합니다.
 			Node temp2 = temp1.next;
 			// 새로운 노드를 생성합니다.
 			Node newNode = new Node(input);
-			// temp1의 다음 노드로 새로운 노드를 지정합니다.
-			temp1.next = newNode;
 			// 새로운 노드의 다음 노드로 temp2를 지정합니다.
 			newNode.next = temp2;
+			// temp2의 이전 노드로 새로운 노드를 지정합니다.
+			if(temp2 != null)
+				temp2.prev = newNode;
+			// temp1의 다음 노드로 새로운 노드를 지정합니다.
+			temp1.next = newNode;
+			//새로운 노드의 이전 노드로 temp1을 지정합니다.
+			newNode.prev = temp1;
 			size++;
 			// 새로운 노드의 다음 노드가 없다면 새로운 노드가 마지막 노드이기 때문에 tail로 지정합니다.
 			if(newNode.next == null){
@@ -103,24 +119,28 @@ public class DoublyLinkedList {
 		// 데이터를 삭제하기 전에 리턴할 값을 임시 변수에 담습니다. 
 		Object returnData = temp.data;
 		temp = null;
+		if(head != null)
+			head.prev = null;
 		size--;
 		return returnData;
 	}
 	public Object remove(int k){
 		if(k == 0)
 			return removeFirst();
-		// 첫번째 노드를 cur(current)으로 지정합니다.
+		// 첫번째 노드를 temp로 지정합니다.
 		Node temp = head;
-		// k-1번째 노드를 cur로 지정합니다.
+		// k-1번째 노드를 temp로 지정합니다.
         for(int i=0; i<k-1; i++){
             temp = temp.next;
         }
-		// cur.next의 값으로 cur.next.next를 지정해야 합니다.
-		// cur.next.next를 위해서는 cur.next가 존재해야 합니다.
-		// 따라서 cur.next를 삭제 대상으로 기록해둡니다.
+		// temp.next의 값으로 temp.next.next를 지정해야 합니다.
+		// temp.next.next를 위해서는 temp.next가 존재해야 합니다.
+		// 따라서 temp.next를 삭제 대상으로 기록해둡니다.
 		Node todoDeleted = temp.next;
-		// cur.next.next의 값을 알았기 때문에 이제 cur.next는 삭제해도 됩니다.
+		// temp.next.next의 값을 알았기 때문에 이제 temp.next가 temp.next.next를 가리키도록 합니다.
 		temp.next = temp.next.next;
+		temp.next.prev = temp;
+		// temp.prev
 		// 삭제된 데이터를 리턴하기 위해서 returnData에 데이터를 저장합니다.
 		Object returnData = todoDeleted.data; 
 		if(todoDeleted == tail){
@@ -165,21 +185,37 @@ public class DoublyLinkedList {
 	}
 	
 	class Ite implements Iterator {
-		// 반복상태를 내부적으로 유지하기 위해서 cursor라는 변수를 만들었습니다. 
-		// 이 값은 next()를 호출 할 때마다 다음 노드로 변경됩니다.
-		Node cursor = head;
+		private Node lastReturned;
+		private Node next;
+		private int nextIndex;
+		
+		Ite(){
+			next = head;
+			nextIndex = 0;
+		}
 		
 		// 본 메소드를 호출하면 cursor의 참조값이 기존 cursor.next로 변경됩니다. 
 		public Object next() {
-			Node prev = cursor;
-			cursor = cursor.next;
-			return prev.data;
+			lastReturned = next;
+			next = next.next;
+			nextIndex++;
+			return lastReturned.data;
 		}
 		
 		// cursor의 값이 없다면 다시 말해서 더 이상 next를 통해서 가져올 노드가 없다면 false를 리턴합니다.
 		// 이를 통해서 next를 호출해도 되는지를 사전에 판단할 수 있습니다. 
 		public boolean hasNext() {
-			return cursor != null;
+			return nextIndex < size();
+		}
+		
+		public boolean hasPrevious() {
+			return nextIndex > 0;
+		}
+		
+		public Object previous() {
+			lastReturned = next = (next == null) ? tail : next.prev;
+			nextIndex--;
+			return lastReturned.data;
 		}
 	}
 

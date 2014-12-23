@@ -41,6 +41,13 @@ public class LinkedListTestCase {
 		numbers.addFirst(40);
 		assertEquals(40, (int)numbers.get(0));
 		assertEquals(10, (int)numbers.get(3));
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(40, i.next());
+		assertEquals(30, i.next());
+		assertEquals(20, i.next());
+		assertEquals(10, i.next());
+		assertEquals(false, i.hasNext());		
 	}
 
 	@Test
@@ -51,6 +58,14 @@ public class LinkedListTestCase {
 		numbers.addLast(40);
 		assertEquals(10, (int)numbers.get(0));
 		assertEquals(40, (int)numbers.get(3));
+		
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(10, i.next());
+		assertEquals(20, i.next());
+		assertEquals(30, i.next());
+		assertEquals(40, i.next());
+		assertEquals(false, i.hasNext());
 	}
 
 	@Test
@@ -65,6 +80,17 @@ public class LinkedListTestCase {
 		assertEquals(5, (int)numbers.get(0));
 		assertEquals(15, (int)numbers.get(2));
 		assertEquals(45, (int)numbers.get(6));
+		
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(5, i.next());
+		assertEquals(10, i.next());
+		assertEquals(15, i.next());
+		assertEquals(20, i.next());
+		assertEquals(30, i.next());
+		assertEquals(40, i.next());
+		assertEquals(45, i.next());
+		assertEquals(false, i.hasNext());
 	}
 
 	@Test
@@ -84,6 +110,14 @@ public class LinkedListTestCase {
 		numbers.addLast(40);
 		numbers.removeFirst();
 		assertEquals(20, (int)numbers.get(0));
+		
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(20, i.next());
+		assertEquals(30, i.next());
+		assertEquals(40, i.next());
+		assertEquals(false, i.hasNext());
+		
 	}
 
 	@Test
@@ -99,6 +133,12 @@ public class LinkedListTestCase {
 		assertEquals(40, (int)numbers.get(1));
 		numbers.remove(1);
 		assertEquals(50, (int)numbers.get(1));
+		
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(20, i.next());
+		assertEquals(50, i.next());
+		assertEquals(false, i.hasNext());
 	}
 
 	@Test

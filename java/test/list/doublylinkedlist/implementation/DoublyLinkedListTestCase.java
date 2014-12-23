@@ -33,6 +33,7 @@ public class DoublyLinkedListTestCase {
 	public void tearDown() throws Exception {
 	}
 
+	
 	@Test
 	public void testAddFirst() {
 		numbers.addFirst(10);
@@ -41,6 +42,18 @@ public class DoublyLinkedListTestCase {
 		numbers.addFirst(40);
 		assertEquals(40, (int)numbers.get(0));
 		assertEquals(10, (int)numbers.get(3));
+		
+		Iterator li = numbers.iterator();
+		assertEquals(true, li.hasNext());
+		assertEquals(false, li.hasPrevious());
+		assertEquals(40, li.next());
+		assertEquals(30, li.next());
+		assertEquals(20, li.next());
+		assertEquals(true, li.hasNext());
+		assertEquals(10, li.next());
+		assertEquals(false, li.hasNext());
+		assertEquals(true, li.hasPrevious());
+		
 	}
 
 	@Test
@@ -51,6 +64,18 @@ public class DoublyLinkedListTestCase {
 		numbers.addLast(40);
 		assertEquals(10, (int)numbers.get(0));
 		assertEquals(40, (int)numbers.get(3));
+		
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
+		assertEquals(10, i.next());
+		assertEquals(20, i.next());
+		assertEquals(30, i.next());
+		assertEquals(30, i.previous());
+		assertEquals(30, i.next());
+		assertEquals(40, i.next());
+		assertEquals(false, i.hasNext());
+		assertEquals(true, i.hasPrevious());
 	}
 
 	@Test
@@ -65,6 +90,29 @@ public class DoublyLinkedListTestCase {
 		assertEquals(5, (int)numbers.get(0));
 		assertEquals(15, (int)numbers.get(2));
 		assertEquals(45, (int)numbers.get(6));
+		
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
+		assertEquals(5, i.next());
+		assertEquals(10, i.next());
+		assertEquals(15, i.next());
+		assertEquals(20, i.next());
+		assertEquals(30, i.next());
+		assertEquals(40, i.next());
+		assertEquals(45, i.next());
+		assertEquals(false, i.hasNext());
+		assertEquals(true, i.hasPrevious());
+		assertEquals(45, i.previous());
+		assertEquals(40, i.previous());
+		assertEquals(30, i.previous());
+		assertEquals(20, i.previous());
+		assertEquals(15, i.previous());
+		assertEquals(10, i.previous());
+		assertEquals(5, i.previous());
+		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
+		
 	}
 
 	@Test
@@ -84,6 +132,20 @@ public class DoublyLinkedListTestCase {
 		numbers.addLast(40);
 		numbers.removeFirst();
 		assertEquals(20, (int)numbers.get(0));
+		
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
+		assertEquals(20, i.next());
+		assertEquals(30, i.next());
+		assertEquals(40, i.next());
+		assertEquals(false, i.hasNext());
+		assertEquals(true, i.hasPrevious());
+		assertEquals(40, i.previous());
+		assertEquals(30, i.previous());
+		assertEquals(20, i.previous());
+		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
 	}
 
 	@Test
@@ -99,6 +161,18 @@ public class DoublyLinkedListTestCase {
 		assertEquals(40, (int)numbers.get(1));
 		numbers.remove(1);
 		assertEquals(50, (int)numbers.get(1));
+		
+		Iterator i = numbers.iterator();
+		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
+		assertEquals(20, i.next());
+		assertEquals(50, i.next());
+		assertEquals(false, i.hasNext());
+		assertEquals(true, i.hasPrevious());
+		assertEquals(50, i.previous());
+		assertEquals(20, i.previous());
+		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
 	}
 
 	@Test
@@ -129,10 +203,6 @@ public class DoublyLinkedListTestCase {
 		numbers.addLast(40);
 		assertEquals(10, numbers.get(0));
 		assertEquals(40, numbers.get(numbers.size()-1));
-	}
-
-	@Test
-	public void testIterator() {
 	}
 
 }

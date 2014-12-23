@@ -109,17 +109,16 @@ public class LinkedList {
 	public Object remove(int k){
 		if(k == 0)
 			return removeFirst();
-		// 첫번째 노드를 cur(current)으로 지정합니다.
+		// 첫번째 노드를 temp로 지정합니다.
 		Node temp = head;
-		// k-1번째 노드를 cur로 지정합니다.
+		// k-1번째 노드(삭제 앞 노드)를 temp로 지정합니다.
         for(int i=0; i<k-1; i++){
             temp = temp.next;
         }
-		// cur.next의 값으로 cur.next.next를 지정해야 합니다.
-		// cur.next.next를 위해서는 cur.next가 존재해야 합니다.
-		// 따라서 cur.next를 삭제 대상으로 기록해둡니다.
+		// 삭제 노드를 todoDeleted에 기록해 둡니다. 
+        // 삭제 노드를 지금 제거하면 삭제 앞 노드와 삭제 뒤 노드를 연결할 수 없습니다.  
 		Node todoDeleted = temp.next;
-		// cur.next.next의 값을 알았기 때문에 이제 cur.next는 삭제해도 됩니다.
+		// 삭제 앞 노드의 다음 노드로 삭제 뒤 노드를 지정합니다.
 		temp.next = temp.next.next;
 		// 삭제된 데이터를 리턴하기 위해서 returnData에 데이터를 저장합니다.
 		Object returnData = todoDeleted.data; 
@@ -165,21 +164,27 @@ public class LinkedList {
 	}
 	
 	class Ite implements Iterator {
-		// 반복상태를 내부적으로 유지하기 위해서 cursor라는 변수를 만들었습니다. 
-		// 이 값은 next()를 호출 할 때마다 다음 노드로 변경됩니다.
-		Node cursor = head;
+		private Node lastReturned;
+		private Node next;
+		private int nextIndex;
+		
+		Ite(){
+			next = head;
+			nextIndex = 0;
+		}
 		
 		// 본 메소드를 호출하면 cursor의 참조값이 기존 cursor.next로 변경됩니다. 
 		public Object next() {
-			Node prev = cursor;
-			cursor = cursor.next;
-			return prev.data;
+			lastReturned = next;
+			next = next.next;
+			nextIndex++;
+			return lastReturned.data;
 		}
 		
 		// cursor의 값이 없다면 다시 말해서 더 이상 next를 통해서 가져올 노드가 없다면 false를 리턴합니다.
 		// 이를 통해서 next를 호출해도 되는지를 사전에 판단할 수 있습니다. 
 		public boolean hasNext() {
-			return cursor != null;
+			return nextIndex < size();
 		}
 	}
 
