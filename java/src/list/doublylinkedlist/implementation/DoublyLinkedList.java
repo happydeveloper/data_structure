@@ -1,15 +1,12 @@
 package list.doublylinkedlist.implementation;
 
-
-
 interface Iterator {
 	public boolean hasNext();
 	public Object next();
 	public boolean hasPrevious();
 	public Object previous();
+	public void add(Object input);
 }
-
-
 
 public class DoublyLinkedList {
 	// 첫번째 노드를 가리키는 필드
@@ -25,6 +22,7 @@ public class DoublyLinkedList {
 		public Node(Object input) {
 			this.data = input;
 			this.next = null;
+			this.prev = null;
 		}
 		// 노드의 내용을 쉽게 출력해서 확인해볼 수 있는 기능
 		public String toString(){
@@ -34,7 +32,7 @@ public class DoublyLinkedList {
 	public void addFirst(Object input){
 		// 노드를 생성합니다.
 		Node temp = new Node(input);
-		// 새로운 노드의 다음 노드로 해드를 지정합니다.
+		// 새로운 노드의 다음 노드로 헤드를 지정합니다.
 		temp.next = head;
 		// 기존에 노드가 있었다면 현재 헤드의 이전 노드로 새로운 노드를 지정합니다.
 		if(head != null)
@@ -53,8 +51,9 @@ public class DoublyLinkedList {
 		if(size == 0){
 			addFirst(input);
 		} else {
-			// 마지막 노드의 다음 노드로 생성한 노드를 지정합니다.
+			// tail의 다음 노드로 생성한 노드를 지정합니다.
 			tail.next = temp;
+			// 새로운 노드의 이전 노드로 tail을 지정합니다.
 			temp.prev = tail;
 			// 마지막 노드를 갱신합니다.
 			tail = temp;
@@ -62,18 +61,28 @@ public class DoublyLinkedList {
 			size++;
 		}
 	}
+	Node node(int index) {
+		// 노드의 인덱스가 전체 노드 수의 반보다 큰지 작은지 계산
+        if (index < size/2) {
+            // head부터 next를 이용해서 인덱스에 해당하는 노드를 찾습니다.
+        	Node x = head;
+            for (int i = 0; i < index; i++)
+                x = x.next;
+            return x;
+        } else {
+        	// tail부터 prev를 이용해서 인덱스에 해당하는 노드를 찾습니다.
+            Node x = tail;
+            for (int i = size - 1; i > index; i--)
+                x = x.prev;
+            return x;
+        }
+    }
 	public void add(int k, Object input){
 		// 만약 k가 0이라면 첫번째 노드에 추가하는 것이기 때문에 addFirst를 사용합니다.
 		if(k == 0){
 			addFirst(input);
 		} else {
-			// 현재 리스트 상에서 첫번째 노드를 temp1으로 담습니다.
-			Node temp1 = head;
-			// k-1 번 반복문을 실행해서 k-1 노드를 찾습니다.
-			for(int i=0; i<k-1; i++){
-				temp1 = temp1.next;
-			}
-			
+			Node temp1 = node(k-1);
 			// k 번째 노드를 temp2로 지정합니다.
 			Node temp2 = temp1.next;
 			// 새로운 노드를 생성합니다.
@@ -119,6 +128,7 @@ public class DoublyLinkedList {
 		// 데이터를 삭제하기 전에 리턴할 값을 임시 변수에 담습니다. 
 		Object returnData = temp.data;
 		temp = null;
+		// 리스트 내에 노드가 있다면 head의 이전 노드를 null로 지정합니다.
 		if(head != null)
 			head.prev = null;
 		size--;
@@ -127,22 +137,17 @@ public class DoublyLinkedList {
 	public Object remove(int k){
 		if(k == 0)
 			return removeFirst();
-		// 첫번째 노드를 temp로 지정합니다.
-		Node temp = head;
 		// k-1번째 노드를 temp로 지정합니다.
-        for(int i=0; i<k-1; i++){
-            temp = temp.next;
-        }
-		// temp.next의 값으로 temp.next.next를 지정해야 합니다.
-		// temp.next.next를 위해서는 temp.next가 존재해야 합니다.
-		// 따라서 temp.next를 삭제 대상으로 기록해둡니다.
+		Node temp = node(k-1);
+		// temp.next를 삭제하기 전에 todoDeleted 변수에 보관합니다.
 		Node todoDeleted = temp.next;
-		// temp.next.next의 값을 알았기 때문에 이제 temp.next가 temp.next.next를 가리키도록 합니다.
+		// 삭제 대상 노드를 연결에서 분리합니다.
 		temp.next = temp.next.next;
+		// 삭제할 노드의 전후 노드를 연결합니다.
 		temp.next.prev = temp;
-		// temp.prev
-		// 삭제된 데이터를 리턴하기 위해서 returnData에 데이터를 저장합니다.
+		// 삭제된 노드의 데이터를 리턴하기 위해서 returnData에 데이터를 저장합니다.
 		Object returnData = todoDeleted.data; 
+		// 삭제된 노드가 tail이었다면 tail을 이전 노드를 tail로 지정합니다.
 		if(todoDeleted == tail){
 			tail = temp;
 		}
@@ -155,12 +160,7 @@ public class DoublyLinkedList {
 		return size;
 	}
 	public Object get(int k){
-		Node temp = head;
-		// index-1번째 인덱스를 찾은 후에 그 next를 temp 값으로 지정합니다.
-		for(int i=0; i<k; i++){
-			temp = temp.next;
-		}
-		return temp.data;
+		return node(k).data;
 	}
 	public Object indexOf(Object data){
 		// 탐색 대상이 되는 노드를 temp로 지정합니다.
@@ -216,6 +216,24 @@ public class DoublyLinkedList {
 			lastReturned = next = (next == null) ? tail : next.prev;
 			nextIndex--;
 			return lastReturned.data;
+		}
+		
+		public void add(Object input){
+			if (next == null)
+                addLast(input);
+            else {
+            	Node prev = next.prev;
+                Node newNode = new Node(input);
+                newNode.prev = prev;
+                newNode.next = next;
+                next.prev = newNode;
+                if (prev == null)
+                    head = newNode;
+                else
+                    prev.next = newNode;
+                size++;
+            }
+            nextIndex++;
 		}
 	}
 

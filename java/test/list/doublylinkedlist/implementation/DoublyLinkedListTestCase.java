@@ -62,8 +62,8 @@ public class DoublyLinkedListTestCase {
 		numbers.addLast(20);
 		numbers.addLast(30);
 		numbers.addLast(40);
-		assertEquals(10, (int)numbers.get(0));
-		assertEquals(40, (int)numbers.get(3));
+		assertEquals(10, numbers.get(0));
+		assertEquals(40, numbers.get(3));
 		
 		Iterator i = numbers.iterator();
 		assertEquals(true, i.hasNext());
@@ -80,6 +80,7 @@ public class DoublyLinkedListTestCase {
 
 	@Test
 	public void testAdd() {
+		// 5 10 15 20 30 40 45
 		numbers.addLast(10);
 		numbers.addLast(20);
 		numbers.addLast(30);
@@ -204,5 +205,21 @@ public class DoublyLinkedListTestCase {
 		assertEquals(10, numbers.get(0));
 		assertEquals(40, numbers.get(numbers.size()-1));
 	}
-
+	
+	@Test
+	public void testIteratorAdd(){
+		numbers.addLast(10);
+		numbers.addLast(20);
+		numbers.addLast(30);
+		numbers.addLast(40);
+		Iterator i = numbers.iterator();
+		i.add(5);
+		assertEquals(5, numbers.get(0));
+		assertEquals(10, i.next());
+		assertEquals(20, i.next());
+		assertEquals(30, i.next());
+		assertEquals(40, i.next());
+		i.add(50);
+		assertEquals(50, numbers.get(5));		
+	}
 }

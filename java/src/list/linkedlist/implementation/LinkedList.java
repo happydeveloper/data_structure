@@ -186,6 +186,7 @@ public class LinkedList {
 		public boolean hasNext() {
 			return nextIndex < size();
 		}
+		
 	}
 
 }
