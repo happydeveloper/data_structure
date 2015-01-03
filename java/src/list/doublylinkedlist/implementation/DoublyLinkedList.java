@@ -5,7 +5,6 @@ interface Iterator {
 	public Object next();
 	public boolean hasPrevious();
 	public Object previous();
-	public void add(Object input);
 }
 
 public class DoublyLinkedList {
@@ -213,28 +212,15 @@ public class DoublyLinkedList {
 		}
 		
 		public Object previous() {
-			lastReturned = next = (next == null) ? tail : next.prev;
+			if(next == null){
+				lastReturned = next = tail;
+			} else {
+				lastReturned = next = next.prev;
+			}
 			nextIndex--;
 			return lastReturned.data;
 		}
 		
-		public void add(Object input){
-			if (next == null)
-                addLast(input);
-            else {
-            	Node prev = next.prev;
-                Node newNode = new Node(input);
-                newNode.prev = prev;
-                newNode.next = next;
-                next.prev = newNode;
-                if (prev == null)
-                    head = newNode;
-                else
-                    prev.next = newNode;
-                size++;
-            }
-            nextIndex++;
-		}
 	}
 
 }
