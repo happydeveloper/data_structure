@@ -1,4 +1,4 @@
-package list.linkedlist.implementation;
+package list.arraylist.implementation;
 
 import static org.junit.Assert.*;
 
@@ -8,13 +8,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import list.arraylist.implementation.ArrayList;
-import list.linkedlist.implementation.*;
-import list.linkedlist.implementation.LinkedList.ListIterator;
-
-public class LinkedListTestCase {
+public class ArrayListTestCase {
 	
-	LinkedList numbers;
+	ArrayList numbers;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -28,13 +24,14 @@ public class LinkedListTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		numbers = new LinkedList();
+		numbers = new ArrayList();
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 
+	
 	@Test
 	public void testAddFirst() {
 		numbers.addFirst(30);
@@ -83,6 +80,7 @@ public class LinkedListTestCase {
 		numbers.addLast(20);
 		numbers.addLast(30);
 		numbers.addLast(40);
+		numbers.removeLast();
 		testIterator();
 	}
 
@@ -117,43 +115,6 @@ public class LinkedListTestCase {
 		assertEquals(1, numbers.indexOf(20));
 		assertEquals(3, numbers.indexOf(40));
 	}
-	
-	@Test
-	public void addIterator(){
-		LinkedList.ListIterator i = numbers.listIterator();
-		i.add(10);
-		i.add(20);
-		i.add(30);
-		testIterator();
-	}
-	
-	@Test(expected=IllegalStateException.class)
-	public void removeFirstIterator(){
-		numbers.addLast(10);
-		numbers.addLast(20);
-		numbers.addLast(30);
-		numbers.addLast(40);
-		LinkedList.ListIterator i = numbers.listIterator();
-		i.remove();
-	}
-	
-	@Test
-	public void removeIterator(){
-		numbers.addLast(5);
-		numbers.addLast(10);
-		numbers.addLast(20);
-		numbers.addLast(30);
-		numbers.addLast(40);
-		LinkedList.ListIterator i = numbers.listIterator();
-		i.next();
-		i.remove();
-		i.next();
-		i.next();
-		i.next();
-		i.next();
-		i.remove();
-		testIterator();
-	}
 
 	@Test
 	public void testGet() {
@@ -165,17 +126,45 @@ public class LinkedListTestCase {
 		assertEquals(40, numbers.get(numbers.size() - 1));
 	}
 	
+	@Test
+	public void addIterator(){
+		ArrayList.ListIterator i = numbers.listIterator();
+		i.add(10);
+		i.add(20);
+		i.add(30);
+		System.out.println(numbers);
+		testIterator();
+	}
+	
+	@Test
+	public void removeIterator(){
+		numbers.addLast(5);
+		numbers.addLast(10);
+		numbers.addLast(20);
+		numbers.addLast(30);
+		ArrayList.ListIterator i = numbers.listIterator();
+		i.next();
+		i.remove();
+		testIterator();
+	}
+	
 	public void testIterator(){
 		// 10, 20, 30을 테스트
-		LinkedList.ListIterator i = numbers.listIterator();
+		ArrayList.ListIterator i = numbers.listIterator();
 		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
 		assertEquals(10, i.next());
 		assertEquals(true, i.hasNext());
+		assertEquals(true, i.hasPrevious());
 		assertEquals(20, i.next());
 		assertEquals(30, i.next());
 		assertEquals(false, i.hasNext());
-		
+		assertEquals(true, i.hasPrevious());
+		assertEquals(30, i.previous());
+		assertEquals(20, i.previous());
+		assertEquals(10, i.previous());
+		assertEquals(true, i.hasNext());
+		assertEquals(false, i.hasPrevious());
 	}
 	
-
 }
